@@ -1,0 +1,7 @@
+vector_store:
+  model_name: "avsolatorio/GIST-all-MiniLM-L6-v2"  # or use this model "all-MiniLM-L6-v2" for faster indexing, but slightly worse retrieval
+  k: 20                                            # don't forget to delete the existing faiss_index, should you change embedding models
+
+llm:
+  model_name: "mixtral-8x7b-32768"
+  temperature: 0

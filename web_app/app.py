@@ -114,18 +114,15 @@ class PDFChatbot:
 
         # Define the prompt
         prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a Chatbot designed to assist with questions about uploaded documents."),
-        MessagesPlaceholder(variable_name="history"),
-        ("human", """Given this history: {history} and \n this context:\n{context}\n, answer this question below\nQuestion:{query}. \
-        by strictly following this instruction: Answer the question based only on the history and context and nothing else. 
-        If asked about unrelated topics, reply ONLY with this: "I'm sorry, but 🅱🅻🅰🆀 will like us to only chat about your documents." \
-        If you don't know the answer based on history and context provided, only say - I don't know. \
-        If asked about your emotions or feelings, only say - "I'm sorry, but 🅱🅻🅰🆀 will like us to only chat about your documents." \
-        Keep your reply concise.
-        
-        
-         Question: {query}"""),
-                    ])
+    ("system", """You are a Chatbot designed to assist with questions about uploaded documents.
+                You are to answer questions based only on the provided history and context. 
+                If the question is unrelated to the documents, reply with: 'I'm sorry, but 🅱🅻🅰🆀 will like us to only chat about your documents.' 
+                If you don't know the answer based on the provided information, reply with: 'I don't know.' 
+                If asked about your emotions or feelings, reply with: 'I'm sorry, but 🅱🅻🅰🆀 will like us to only chat about your documents.'"""),
+    MessagesPlaceholder(variable_name="history"),
+    ("human", """Given this history: {history} and this context from the documents: {context}, answer the following question: {query}""")
+])
+
 
         # Define the retriever and retrieval chain
         output_parser = StrOutputParser()

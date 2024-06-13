@@ -5,8 +5,8 @@ from pprint import pprint
 
 from graph.graph import app
 
-question1 = "are they the only nutrients needed in the body??"
-inputs = {"question": question1}
+question = "what are we talking about?"
+inputs = {"question": question}
 
 for output in app.stream(inputs):
     for key, value in output.items():
