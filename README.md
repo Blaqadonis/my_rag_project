@@ -11,8 +11,6 @@ The focus of this project is on the Retrieval Augmented Generation (RAG) techniq
 In this project, I've implemented more advanced versions of RAG in addition to the basic version. The advanced version includes the following techniques:
 * **Contextual Compression**: This technique reduces the number of retrieved documents by compressing them based on their relevance to the query.
 * **AI assistants/Agentic workflows**: These techniques use agents and other runnable components in addition to chains. For this purpose, I have used LangGraph.
-
-In addition to these, the project itself has other features like:
 * **Langfuse**: Langfuse is a tool for debugging and monitoring language models. I've integrated Langfuse into the project to track and analyze the chatbot's performance.
 * **Giskard**: Giskard is a tool for testing and evaluating machine learning models. I've used Giskard to evaluate the chatbot's performance on a test suite generated from the uploaded PDF documents.
 
