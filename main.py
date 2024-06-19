@@ -5,7 +5,7 @@ from pprint import pprint
 
 from graph.graph import app
 
-question = "what are we talking about?"
+question = "what are macronutrients?"
 inputs = {"question": question}
 
 for output in app.stream(inputs):

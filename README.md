@@ -36,26 +36,17 @@ Get started with Langfuse [here](https://cloud.langfuse.com/?getStarted=1)
 **Agentic RAG**: (NB: For this approach, it is hard-coded that you must query [this pdf](https://pressbooks.oer.hawaii.edu/humannutrition2/))
 * Run the script: ```python main.py```
 * Start chatting. Use ```q``` to quit.
-
-![image](https://github.com/Blaqadonis/my_rag_project/assets/100685852/30ab954e-321f-4bb6-8eb9-e8b3ad2fa8cc)
-
   
 **RAG with just chains**:
 * Run the script: ```python script.py```
 * Upload your PDF document(s) by providing the filepath when prompted.
 * Start chatting. Use ```q``` to quit.
 
-![image](https://github.com/Blaqadonis/my_rag_project/assets/100685852/0710b482-f2a5-4ea3-bd80-f937b15a369c)
-
-
 ### **Web User Interface**
 **Gradio**:
 * ```cd web_app```
 * Run the script: ```python app.py```
 * Follow this link for UI: [gradio](http://127.0.0.1:7860/)
-
-  ![image](https://github.com/Blaqadonis/my_rag_project/assets/100685852/15fa2d30-248e-49bc-82ec-1e424e09371c)
-
 
 ## **Configuration**
 ```config.yaml``` contains the configuration for the vector store and language model used in the chatbot. You can modify the following parameters as you wish:
