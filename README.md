@@ -2,7 +2,12 @@
 
 ### Powered by 🅱🅻🅰🆀
 -----------------------------------------------------------
-![image](https://github.com/Blaqadonis/my_rag_project/assets/100685852/e6f00e40-9f39-4857-b3da-9916aad1d54b)
+![pikaso_texttoimage_Oil-painting-for-my-github-repo-I-want-an-image-th (1)](https://github.com/user-attachments/assets/f49142b6-72f2-4e2e-ac6e-58b4e4ba7db8)
+
+
+
+
+
 
 This project is an AI application that allows you to chat with any PDF document by simply uploading the document to its knowledge base. The chatbot is powered by the LangChain framework and open-source models.
 The focus of this project is on the Retrieval Augmented Generation (RAG) technique to create a chatbot capable of learning from an external knowledge base.
