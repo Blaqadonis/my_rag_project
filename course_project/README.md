@@ -1,8 +1,9 @@
 # PDFChatbot
 
-![Project Structure](c:\Users\Odiaka\world\Data_Science\ML Engineering for Production\llms\llm-zoomcamp\related\my_rag_project_\web_app\project_architecture.jpg)
+![project_architecture](https://github.com/user-attachments/assets/76c3e4e2-4151-4438-b25b-621f97b131bf)
 
-This project is part of the **LLM Zoomcamp 2024** hosted by DataTalksClub. The aim of this project is to create a chatbot that can assist with questions about uploaded PDF documents using various LangChain components and a Gradio interface.
+
+This project is part of the **LLM Zoomcamp 2024** course hosted by DataTalksClub. The aim of this project is to create a chatbot that can assist with questions about uploaded PDF documents using various LangChain components and a Gradio interface.
 
 ## Project Structure
 
@@ -68,37 +69,36 @@ vector_store:
 llm:
   model_name: "LLama3.1"
   temperature: 0.7
+```
 
-Running the Application
+## Running the Application
 To start the chatbot application, simply run:
 
-sh
+```sh
 python app.py
+```
 This will launch a Gradio interface where you can upload PDF files and interact with the chatbot.
 
-Usage
-Upload PDF: Click on the upload button to select one or more PDF files.
-Ask Questions: Type your question in the text box and click send. The chatbot will provide answers based on the content of the uploaded PDFs.
-View Document: The front page of the uploaded PDF will be displayed in the image box.
+## Usage
+* Upload PDF: Click on the upload button to select one or more PDF files.
+* Ask Questions: Type your question in the text box and click send. The chatbot will provide answers based on the content of the uploaded PDFs.
+* View Document: The front page of the uploaded PDF will be displayed in the image box.
 
-Project Structure
-app.py: The main application script that integrates all components.
-config.yaml: Configuration file for setting model parameters and other settings.
-requirements.txt: List of dependencies required for the project.
 
-Contributing
+## Contributing
 Contributions to enhance the PDFChatbot project are welcome. Please follow these steps to contribute:
 
-Fork the repository
-Create a new branch (git checkout -b feature-branch)
-Make your changes
-Commit your changes (git commit -m 'Add some feature')
-Push to the branch (git push origin feature-branch)
-Open a pull request
+* Fork the repository
+* Create a new branch (git checkout -b feature-branch)
+* Make your changes
+* Commit your changes (git commit -m 'Add some feature')
+* Push to the branch (git push origin feature-branch)
+* Open a pull request
 
-License
+## License
 This project is licensed under the MIT License
 
-Acknowledgments
-Alexey Grigorev, founder DataTalksClub - for providing the platform to learn and grow.
-Feel free to reach out if you have any questions or need further assistance.
+## Acknowledgments
+I want to acknowledge [Alexey Grigorev](https://www.linkedin.com/in/agrigorev/), founder [DataTalksClub](https://datatalks.club/) - for providing the platform to learn and grow.
+
+Feel free to reach out if you have any questions or need further assistance - [🅱🅻🅰🆀](https://www.linkedin.com/in/chinonsoodiaka/)
