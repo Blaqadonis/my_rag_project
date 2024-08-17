@@ -9,8 +9,10 @@ This project is part of the **LLM Zoomcamp 2024** hosted by DataTalksClub. The a
 course_project/
 ├── app.py
 ├── config.yaml
+├── evaluation.py
 ├── requirements.txt
 └── README.md
+
 
 
 ## Overview
@@ -46,14 +48,13 @@ PDFChatbot is a powerful tool designed to assist users with extracting and query
 
 3. **Set up environment variables**:
     - Create a `.env` file and update it with your configuration.
-    ```
+    ```env
     HUGGINGFACE_HUB_API_KEY = '...'
     LANGCHAIN_API_KEY = '...'
     GROQ_API_KEY = '...'
     LANGFUSE_SECRET_KEY= 'sk-...'
     LANGFUSE_PUBLIC_KEY= 'pk-...'
     LANGFUSE_HOST= 'https://cloud.langfuse.com'
-
     ```
 
 ### Configuration
@@ -68,6 +69,7 @@ vector_store:
 llm:
   model_name: "LLama3.1"
   temperature: 0.7
+
 
 Running the Application
 To start the chatbot application, simply run:
