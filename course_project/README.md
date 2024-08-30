@@ -90,8 +90,8 @@ Using the Deployed Chatbot:
 You can also interact with the chatbot that has been deployed on Hugging Face Spaces. To start using the deployed chatbot:
 
 Visit the Deployed Chatbot: 
-```Click on [this link](https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot) to open the chatbot application.
-```
+Click on [this link](https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot) to open the chatbot application.
+
 
 
 
