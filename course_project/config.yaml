@@ -1,6 +1,6 @@
 vector_store:
   model_name: "sentence-transformers/all-mpnet-base-v2"  # or use this model "all-MiniLM-L6-v2 for faster indexing, but slightly worse retrieval
-  k: 3                                            # don't forget to delete the existing faiss_index, should you change embedding models 
+  k: 1                                            # don't forget to delete the existing faiss_index, should you change embedding models all-mpnet-base-v2
                                                      
 
 llm:
