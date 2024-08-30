@@ -49,7 +49,7 @@ Get started with Langfuse [here](https://cloud.langfuse.com/?getStarted=1)
 
 ### **Web User Interface**
 **Gradio**:
-* ```cd web_app```
+* ```cd course_project```
 * Run the script: ```python app.py```
 * Follow this link for UI: [gradio](http://127.0.0.1:7860/)
 
@@ -75,7 +75,7 @@ Contributions are welcome! If you have any suggestions, improvements, or bug fix
 * Openai
 * Groq
 * Ollama
-* Giskard
+
   
 ## **Contact**
 For any questions, inquiries, or further collaboration, please contact [🅱🅻🅰🆀](https://www.linkedin.com/in/chinonsoodiaka/)
