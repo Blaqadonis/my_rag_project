@@ -17,7 +17,7 @@ In this project, I've implemented more advanced versions of RAG in addition to t
 * **Contextual Compression**: This technique reduces the number of retrieved documents by compressing them based on their relevance to the query.
 * **AI assistants/Agentic workflows**: These techniques use agents and other runnable components in addition to chains. For this purpose, I have used LangGraph.
 * **Langfuse**: Langfuse is a tool for debugging and monitoring language models. I've integrated Langfuse into the project to track and analyze the chatbot's performance.
-* **Giskard**: Giskard is a tool for testing and evaluating machine learning models. I've used Giskard to evaluate the chatbot's performance on a test suite generated from the uploaded PDF documents.
+
 
 ## **Requirements**
 * Python 3.10 or higher
