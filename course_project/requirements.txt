@@ -1,3 +1,4 @@
+# unstructured[all-docs]  #uncomment if you get poppler error
 langchain_huggingface
 sentence-transformers
 langchain_community

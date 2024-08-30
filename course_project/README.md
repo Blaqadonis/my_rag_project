@@ -85,6 +85,16 @@ python app.py
 ```
 This will launch a Gradio interface where you can upload PDF files and interact with the chatbot.
 
+Using the Deployed Chatbot:
+
+You can also interact with the chatbot that has been deployed on Hugging Face Spaces. To start using the deployed chatbot:
+
+Visit the Deployed Chatbot: 
+```Click on [this link](https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot) to open the chatbot application.
+```
+
+
+
 ## Usage
 * Upload PDF: Click on the upload button to select one or more PDF files.
 * Ask Questions: Type your question in the text box and click send. The chatbot will provide answers based on the content of the uploaded PDFs.
@@ -130,7 +140,8 @@ The ```llama-3.1-70b-versatile-hallucination_report.csv``` report highlights any
 
 
 ### Additional Notes
-Waiting for the First Query: The Time Taken to First Token (TTFT) for this application is quite high, depending on your computer's specifications. Therefore, you may have to wait a while for the first query to get answered. However, it is smooth-sailing after that.
+- Waiting for the First Query: The Time Taken to First Token (TTFT) for this application is quite high, depending on your computer's specifications. Therefore, you may have to wait a while for the first query to get answered. However, it is smooth-sailing after that.
+- Due to a Poppler dependency issue peculiar to Hugging Face Spaces, the first page of the PDF may not show on Spaces. However, it will display correctly locally if you have Poppler installed. Please ignore the warning and proceed with writing your query.
 
 ## Contributing
 Contributions to enhance the PDFChatbot project are welcome. Please follow these steps to contribute:
