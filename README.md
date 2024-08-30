@@ -1,5 +1,5 @@
 ---
-title: Gradio Chatbot
+title: Blaqs PDF Chatbot
 emoji: 💬
 colorFrom: yellow
 colorTo: purple
