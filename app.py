@@ -8,6 +8,8 @@ from langchain_core.messages import BaseMessage
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.output_parsers import StrOutputParser
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
+from langchain_cohere import CohereRerank
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_groq import ChatGroq
@@ -20,6 +22,7 @@ from pdf2image import convert_from_path
 from langfuse.callback import CallbackHandler
 import logging
 import gradio as gr
+import fitz  # PyMuPDF
 
 load_dotenv()
 
@@ -86,12 +89,12 @@ class PDFChatbot:
             """
             self.messages = []
 
-    def process_pdfs(self, pdf_files: List[str], query: str, history: List[List[str]] = []) -> List[List[str]]:
+    def process_pdfs(self, pdf_files: List[Tuple[str, str]], query: str, history: List[List[str]] = []) -> List[List[str]]:
         """
         Process the uploaded PDF files and answer the given query using the chatbot.
 
         Args:
-            pdf_files (List[str]): The uploaded PDF files.
+            pdf_files (List[Tuple[str, str]]): The uploaded PDF files.
             query (str): The query to answer.
             history (List[List[str]], optional): The chat history. Defaults to an empty list.
 
@@ -105,7 +108,7 @@ class PDFChatbot:
         if self.faiss_index is None:
             chunks = []
             for pdf_file in pdf_files:
-                pdf_path = pdf_file.name
+                pdf_path = pdf_file[0]  # Extract file path
                 chunks.extend(self.load_and_chunk_data(pdf_path))
             self.faiss_index = FAISS.from_documents(chunks, self.hf)
             self.faiss_index.save_local("faiss_index")
@@ -130,7 +133,7 @@ class PDFChatbot:
             | RunnableParallel({"output": prompt | self.llm | output_parser, "context": itemgetter("context")})
         )
         
-        logging.getLogger().setLevel(logging.ERROR) # hide warning log
+        logging.getLogger().setLevel(logging.ERROR)  # Hide warning logs
 
         # Define the retrieval_chain_with_history
         retrieval_chain_with_history = RunnableWithMessageHistory(
@@ -164,26 +167,35 @@ class PDFChatbot:
         chunks = text_splitter.split_documents(text_data)
         return chunks
 
-    def render_file(self, pdf_files: List[str]) -> Image.Image:
+    def render_file(self, pdf_files: List[Tuple[str, str]]) -> Image.Image:
         """
-        Render the front page of the first uploaded PDF file.
+        Render the front page of the first uploaded PDF file using fitz.
 
         Args:
-            pdf_files (List[str]): The uploaded PDF files.
+            pdf_files (List[Tuple[str, str]]): The uploaded PDF files.
 
         Returns:
             Image.Image: The image of the front page.
         """
-        # Check if pdf_files is None
+        # Check if pdf_files is None or empty
         if not pdf_files:
             return None
 
         # Choose the first PDF file
-        pdf_file = pdf_files[0]
+        pdf_file_path = pdf_files[0][0]  # File path is in the first tuple element
 
-        # Convert the front page of the PDF file to an image
-        images = convert_from_path(pdf_file.name, first_page=1, last_page=1)
-        image = images[0]
+        # Open the PDF file
+        pdf_document = fitz.open(pdf_file_path)
+
+        # Render the first page as an image
+        first_page = pdf_document.load_page(0)
+        pix = first_page.get_pixmap()
+
+        # Convert the image to PIL format
+        image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+
+        # Close the PDF document
+        pdf_document.close()
 
         return image
 
@@ -222,6 +234,7 @@ class PDFChatbot:
 
         return demo, chat_history, query, submit_btn, pdf_files, image_box
 
-if __name__ == '__main__':
-    chatbot = PDFChatbot('config.yaml')
-    demo, chat_history, query, submit
+if __name__ == "__main__":
+    chatbot = PDFChatbot(config_path="config.yaml")
+    demo, chat_history, query, submit_btn, pdf_files, image_box = chatbot.create_demo()
+    demo.launch()
