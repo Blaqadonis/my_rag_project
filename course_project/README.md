@@ -101,6 +101,7 @@ Click on [this link](https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot)
 * View Document: The front page of the uploaded PDF will be displayed in the image box.
 
 ![is_today_thursday](https://github.com/user-attachments/assets/f399931c-3435-4829-a7b7-bf99ff073093)
+![spaces_error](https://github.com/user-attachments/assets/9a9b8e2f-7f9a-47bf-a6c7-c4eb383f7ad7)
 
 
 ## Evaluation
