@@ -1,4 +1,4 @@
-"unstructured[all-docs]"
+unstructured[all-docs]
 langchain_huggingface
 sentence-transformers
 langchain_community
