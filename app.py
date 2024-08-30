@@ -22,7 +22,6 @@ from pdf2image import convert_from_path
 from langfuse.callback import CallbackHandler
 import logging
 import gradio as gr
-import fitz  # PyMuPDF
 
 load_dotenv()
 
@@ -89,12 +88,12 @@ class PDFChatbot:
             """
             self.messages = []
 
-    def process_pdfs(self, pdf_files: List[Tuple[str, str]], query: str, history: List[List[str]] = []) -> List[List[str]]:
+    def process_pdfs(self, pdf_files: List[str], query: str, history: List[List[str]] = []) -> List[List[str]]:
         """
         Process the uploaded PDF files and answer the given query using the chatbot.
 
         Args:
-            pdf_files (List[Tuple[str, str]]): The uploaded PDF files.
+            pdf_files (List[str]): The uploaded PDF files.
             query (str): The query to answer.
             history (List[List[str]], optional): The chat history. Defaults to an empty list.
 
@@ -108,32 +107,37 @@ class PDFChatbot:
         if self.faiss_index is None:
             chunks = []
             for pdf_file in pdf_files:
-                pdf_path = pdf_file[0]  # Extract file path
+                pdf_path = pdf_file.name
                 chunks.extend(self.load_and_chunk_data(pdf_path))
             self.faiss_index = FAISS.from_documents(chunks, self.hf)
             self.faiss_index.save_local("faiss_index")
 
         # Define the prompt
         prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are a Chatbot designed to assist with questions about uploaded documents.
-                        You are to answer questions based only on the provided history and context. 
-                        If the question is unrelated to the documents, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.' 
-                        If you don't know the answer based on the provided information, reply with: 'I don't know.' 
-                        If asked about your emotions or feelings, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.'"""),
-            MessagesPlaceholder(variable_name="history"),
-            ("human", """Given this history: {history} and this context from the documents: {context}, answer the following question: {query}""")
-        ])
+    ("system", """You are a Chatbot designed to assist with questions about uploaded documents.
+                You are to answer questions based only on the provided history and context. 
+                If the question is unrelated to the documents, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.' 
+                If you don't know the answer based on the provided information, reply with: 'I don't know.' 
+                If asked about your emotions or feelings, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.'"""),
+    MessagesPlaceholder(variable_name="history"),
+    ("human", """Given this history: {history} and this context from the documents: {context}, answer the following question: {query}""")
+])
+
 
         # Define the retriever and retrieval chain
         output_parser = StrOutputParser()
         retriever = self.faiss_index.as_retriever(search_type="similarity_score_threshold", search_kwargs={"k": self.vector_store_k, "score_threshold": 0.5})
         
+        #compressor = CohereRerank()
+        #compression_retriever = ContextualCompressionRetriever(
+           # base_compressor=compressor, base_retriever=retriever
+        #)
         retrieval_chain = (
             {"context": itemgetter("query") | retriever, "query": itemgetter("query"), "history": itemgetter("history")}
             | RunnableParallel({"output": prompt | self.llm | output_parser, "context": itemgetter("context")})
         )
         
-        logging.getLogger().setLevel(logging.ERROR)  # Hide warning logs
+        logging.getLogger().setLevel(logging.ERROR) # hide warning log
 
         # Define the retrieval_chain_with_history
         retrieval_chain_with_history = RunnableWithMessageHistory(
@@ -167,35 +171,26 @@ class PDFChatbot:
         chunks = text_splitter.split_documents(text_data)
         return chunks
 
-    def render_file(self, pdf_files: List[Tuple[str, str]]) -> Image.Image:
+    def render_file(self, pdf_files: List[str]) -> Image.Image:
         """
-        Render the front page of the first uploaded PDF file using fitz.
+        Render the front page of the first uploaded PDF file.
 
         Args:
-            pdf_files (List[Tuple[str, str]]): The uploaded PDF files.
+            pdf_files (List[str]): The uploaded PDF files.
 
         Returns:
             Image.Image: The image of the front page.
         """
-        # Check if pdf_files is None or empty
-        if not pdf_files:
+        # Check if pdf_files is None
+        if pdf_files is None:
             return None
 
         # Choose the first PDF file
-        pdf_file_path = pdf_files[0][0]  # File path is in the first tuple element
+        pdf_file = pdf_files[0]
 
-        # Open the PDF file
-        pdf_document = fitz.open(pdf_file_path)
-
-        # Render the first page as an image
-        first_page = pdf_document.load_page(0)
-        pix = first_page.get_pixmap()
-
-        # Convert the image to PIL format
-        image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-
-        # Close the PDF document
-        pdf_document.close()
+        # Convert the front page of the PDF file to an image
+        images = convert_from_path(pdf_file.name, first_page=1, last_page=1)
+        image = images[0]
 
         return image
 
@@ -234,7 +229,7 @@ class PDFChatbot:
 
         return demo, chat_history, query, submit_btn, pdf_files, image_box
 
-if __name__ == "__main__":
-    chatbot = PDFChatbot(config_path="config.yaml")
+if __name__ == '__main__':
+    chatbot = PDFChatbot('config.yaml')
     demo, chat_history, query, submit_btn, pdf_files, image_box = chatbot.create_demo()
     demo.launch()
