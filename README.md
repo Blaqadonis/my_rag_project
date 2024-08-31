@@ -12,12 +12,19 @@ The RAG Bible is a collection of my personal research and learnings on Retrieval
 
 Command Line Interface:
 
-Run python script.py for a basic CLI interaction.
-Run python main.py for interacting with an agentic system via CLI.
+* Run ```python script.py``` for a basic CLI interaction.
+* Run ```python main.py``` for interacting with an agentic system via CLI.
+  
 Web User Interface:
 
 Enter the course_project directory and follow the instructions in README.md for web UI interaction.
-This repository also contains my learnings from the 2024 LLM Zoomcamp hosted by DataTalksClub, which focused on RAG. Confused about where to start? Dive into the notebooks. When you're ready to interact with a subproject, use the CLI commands or explore the web UI as described.
+
+
+This repository also contains my learnings from the [**2024 LLM Zoomcamp course**](https://github.com/DataTalksClub/llm-zoomcamp.git) hosted by [DataTalksClub](https://courses.datatalks.club/llm-zoomcamp-2024/), which focused on RAG. 
+
+### Confused about where to start? Dive into the notebooks. 
+
+When you're ready to interact with a subproject, use the CLI commands or explore the web UI as described.
 
 
   
