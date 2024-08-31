@@ -8,8 +8,6 @@ from langchain_core.messages import BaseMessage
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.output_parsers import StrOutputParser
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
-from langchain_cohere import CohereRerank
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_groq import ChatGroq
@@ -128,10 +126,6 @@ class PDFChatbot:
         output_parser = StrOutputParser()
         retriever = self.faiss_index.as_retriever(search_type="similarity_score_threshold", search_kwargs={"k": self.vector_store_k, "score_threshold": 0.5})
         
-        #compressor = CohereRerank()
-        #compression_retriever = ContextualCompressionRetriever(
-           # base_compressor=compressor, base_retriever=retriever
-        #)
         retrieval_chain = (
             {"context": itemgetter("query") | retriever, "query": itemgetter("query"), "history": itemgetter("history")}
             | RunnableParallel({"output": prompt | self.llm | output_parser, "context": itemgetter("context")})

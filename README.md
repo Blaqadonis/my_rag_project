@@ -8,73 +8,17 @@
 
 
 
+The RAG Bible is a collection of my personal research and learnings on Retrieval Augmented Generation (RAG) over several months. This repository is designed to benefit both beginners and experienced professionals in the field of RAG. The project includes:
 
-This project is an AI application that allows you to chat with any PDF document by simply uploading the document to its knowledge base. The chatbot is powered by the LangChain framework and open-source models.
-The focus of this project is on the Retrieval Augmented Generation (RAG) technique to create a chatbot capable of learning from an external knowledge base.
+Command Line Interface:
 
-## **Features**
-In this project, I've implemented more advanced versions of RAG in addition to the basic version. The advanced version includes the following techniques:
-* **Contextual Compression**: This technique reduces the number of retrieved documents by compressing them based on their relevance to the query.
-* **AI assistants/Agentic workflows**: These techniques use agents and other runnable components in addition to chains. For this purpose, I have used LangGraph.
-* **Langfuse**: Langfuse is a tool for debugging and monitoring language models. I've integrated Langfuse into the project to track and analyze the chatbot's performance.
+Run python script.py for a basic CLI interaction.
+Run python main.py for interacting with an agentic system via CLI.
+Web User Interface:
 
+Enter the course_project directory and follow the instructions in README.md for web UI interaction.
+This repository also contains my learnings from the 2024 LLM Zoomcamp hosted by DataTalksClub, which focused on RAG. Confused about where to start? Dive into the notebooks. When you're ready to interact with a subproject, use the CLI commands or explore the web UI as described.
 
-## **Requirements**
-* Python 3.10 or higher
-* LangChain library
-* Open-source and closed-source models (e.g., HuggingFace, Groq, Openai, Cohere)
-* PDF document(s) for the knowledge base
-## **Installation**
-* Clone the repository:   ```git clone https://github.com/your-username/pdf-chatbot.git```
-* ``` cd pdf-chatbot ```
-* Install the required dependencies:  ```pip install -r requirements.txt```
-* Set up the environment variables by creating a ```.env``` file in the project root directory and adding the following variables:
-
-```
-LANGFUSE_SECRET_KEY=<your_langfuse_secret_key>
-LANGFUSE_PUBLIC_KEY=<your_langfuse_public_key>
-LANGFUSE_HOST=<your_langfuse_host>
-```
-Get started with Langfuse [here](https://cloud.langfuse.com/?getStarted=1)
-## **Usage**
-### **Command Line Interface**
-**Agentic RAG**: (NB: For this approach, it is hard-coded that you must query [this pdf](https://pressbooks.oer.hawaii.edu/humannutrition2/))
-* Run the script: ```python main.py```
-* Start chatting. Use ```q``` to quit.
-  
-**RAG with just chains**:
-* Run the script: ```python script.py```
-* Upload your PDF document(s) by providing the filepath when prompted.
-* Start chatting. Use ```q``` to quit.
-
-### **Web User Interface**
-**Gradio**:
-* ```cd course_project```
-* Run the script: ```python app.py```
-* Follow this link for UI: [gradio](http://127.0.0.1:7860/)
-
-## **Configuration**
-```config.yaml``` contains the configuration for the vector store and language model used in the chatbot. You can modify the following parameters as you wish:
-```
-vector_store.model_name: The name of the embedding model used for vectorizing the text data.
-vector_store.k: The number of nearest neighbors to retrieve during the RAG process.
-llm.model_name: The name of the language model used for generating responses.
-llm.temperature: The temperature parameter for the language model.
-```
-## **Evaluation**
-To evaluate the performance of the chatbot, you can use ```evaluation.py```. This script generates a test suite based on the uploaded PDF documents and evaluates the chatbot's responses. 
-Get started with Giskard. The results are displayed in the [console](https://docs.giskard.ai/en/latest/getting_started/quickstart/quickstart_llm.html)
-
-## **Contributing**
-Contributions are welcome! If you have any suggestions, improvements, or bug fixes, please submit a pull request. For major changes, please open an issue first to discuss the proposed changes.
-
-## **Acknowledgements**
-* LangChain
-* HuggingFace
-* Cohere
-* Openai
-* Groq
-* Ollama
 
   
 ## **Contact**
