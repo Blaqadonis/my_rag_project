@@ -3,11 +3,11 @@ name: Deploy to Hugging Face Spaces
 on:
   push:
     branches:
-      - main  # Trigger deployment on the main branch
+      - main  # Trigger deployment on the 'main' branch
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # GitHub uses Ubuntu runners to execute the actions
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'  # Use Python 3.10
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
@@ -25,11 +25,10 @@ jobs:
 
     - name: Hugging Face Spaces Deploy
       env:
-        HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Hugging Face token stored as GitHub secret
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Token stored in GitHub Secrets
       run: |
-        git lfs install
-        git config --global user.email "chinonsoodiaka@gmail.com"  
-        git config --global user.name "Blaqadonis"  
-        huggingface-cli login --token $HF_TOKEN --add-to-git-credential  
-        git remote set-url origin https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot  
-        git push origin main  # Push changes to Hugging Face Spaces repository
+        git config --global user.email "chinonsoodiaka@gmail.com"
+        git config --global user.name "Blaqadonis"
+        huggingface-cli login --token $HF_TOKEN
+        git remote add hf https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot.git  # Add Hugging Face remote
+        git push hf main  # Push to Hugging Face Space's main branch
