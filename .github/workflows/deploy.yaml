@@ -3,7 +3,7 @@ name: Deploy to Hugging Face Spaces
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger deployment if needed
+      - main  # Trigger deployment on the main branch
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'  
+        python-version: '3.10'  # Use Python 3.10
 
     - name: Install dependencies
       run: |
@@ -25,10 +25,11 @@ jobs:
 
     - name: Hugging Face Spaces Deploy
       env:
-        HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Use the Hugging Face token from GitHub secrets
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Hugging Face token stored as GitHub secret
       run: |
         git lfs install
         git config --global user.email "chinonsoodiaka@gmail.com"  
-        git config --global user.name "Blaqadonis"                  
-        huggingface-cli login --token $HF_TOKEN                    
-        git push https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot/ main
+        git config --global user.name "Blaqadonis"  
+        huggingface-cli login --token $HF_TOKEN --add-to-git-credential  
+        git remote set-url origin https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot  
+        git push origin main  # Push changes to Hugging Face Spaces repository
