@@ -29,6 +29,6 @@ jobs:
       run: |
         git config --global user.email "chinonsoodiaka@gmail.com"
         git config --global user.name "Blaqadonis"
-        huggingface-cli login --token $HF_TOKEN
-        git remote add hf https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot.git  # Add Hugging Face remote
+        huggingface-cli login --token $HF_TOKEN --add-to-git-credential  # Add token to Git credentials
+        git remote add hf https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot.git
         git push hf main  # Push to Hugging Face Space's main branch
