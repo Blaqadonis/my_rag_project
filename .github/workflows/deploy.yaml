@@ -12,8 +12,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Fetch all history for all branches and tags
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -23,24 +21,28 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
         pip install --upgrade huggingface_hub
+
+    - name: Prepare .github directory for push
+      run: |
+        mkdir -p /tmp/hf_space
+        cp -r .github /tmp/hf_space/
+        cd /tmp/hf_space
 
     - name: Hugging Face Spaces Deploy
       env:
         HF_TOKEN: ${{ secrets.HF_TOKEN }}  # Token stored in GitHub Secrets
+      working-directory: /tmp/hf_space
       run: |
+        git init
         git config --global user.email "chinonsoodiaka@gmail.com"
         git config --global user.name "Blaqadonis"
+        git add .
+        git commit -m "Update .github directory"
         echo "Logging in to Hugging Face"
         huggingface-cli login --token $HF_TOKEN
-        echo "Setting up git remote"
-        git remote remove hf || true
-        git remote add hf https://Blaqadonis:$HF_TOKEN@huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot
-        echo "Disabling Git LFS"
-        git lfs uninstall
         echo "Pushing to Hugging Face Spaces"
-        git push hf main --force || (echo "Push failed. Error:" && git push hf main --force -v)
+        git push https://Blaqadonis:$HF_TOKEN@huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot main --force
 
     - name: Verify Deployment
       run: |
