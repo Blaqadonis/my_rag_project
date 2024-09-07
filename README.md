@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # **The RAG Bible**
 
 ### Powered by 🅱🅻🅰🆀
