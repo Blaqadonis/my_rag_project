@@ -39,10 +39,11 @@ jobs:
         git config --global user.name "Blaqadonis"
         git add .
         git commit -m "Update .github directory"
+        git branch -M main
         echo "Logging in to Hugging Face"
         huggingface-cli login --token $HF_TOKEN
         echo "Pushing to Hugging Face Spaces"
-        git push https://Blaqadonis:$HF_TOKEN@huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot main --force
+        git push -u https://Blaqadonis:$HF_TOKEN@huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot main --force
 
     - name: Verify Deployment
       run: |
