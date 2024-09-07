@@ -26,7 +26,7 @@ jobs:
     - name: Prepare files for push
       run: |
         mkdir -p /tmp/hf_space
-        cp -r .github /tmp/hf_space/
+        cp app.py config.yaml requirements.txt /tmp/hf_space/
         cd /tmp/hf_space
         echo "---
         title: Blaqs PDF Chatbot
@@ -52,7 +52,7 @@ jobs:
         git config --global user.email "chinonsoodiaka@gmail.com"
         git config --global user.name "Blaqadonis"
         git add .
-        git commit -m "Update .github directory and README.md"
+        git commit -m "Update app files and README.md"
         git branch -M main
         echo "Logging in to Hugging Face"
         huggingface-cli login --token $HF_TOKEN
