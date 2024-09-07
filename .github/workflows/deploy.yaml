@@ -23,18 +23,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade huggingface_hub
 
-    - name: Prepare files for push
+    - name: Update README.md
       run: |
-        mkdir -p /tmp/hf_space
-        cp app.py config.yaml requirements.txt /tmp/hf_space/
-        cd /tmp/hf_space
         echo "---
         title: Blaqs PDF Chatbot
         emoji: 📚
         colorFrom: blue
         colorTo: green
         sdk: gradio
-        sdk_version: 3.20.1
+        sdk_version: 4.43.0
         app_file: app.py
         pinned: false
         ---
@@ -42,6 +39,16 @@ jobs:
         # Blaqs PDF Chatbot
 
         This is a PDF chatbot application." > README.md
+        git config --global user.email "chinonsoodiaka@gmail.com"
+        git config --global user.name "Blaqadonis"
+        git add README.md
+        git commit -m "Update README.md with Space configuration"
+        git push origin main
+
+    - name: Prepare files for Hugging Face Space
+      run: |
+        mkdir -p /tmp/hf_space
+        cp app.py config.yaml requirements.txt README.md /tmp/hf_space/
 
     - name: Hugging Face Spaces Deploy
       env:
