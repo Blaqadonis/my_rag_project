@@ -23,11 +23,25 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade huggingface_hub
 
-    - name: Prepare .github directory for push
+    - name: Prepare files for push
       run: |
         mkdir -p /tmp/hf_space
         cp -r .github /tmp/hf_space/
         cd /tmp/hf_space
+        echo "---
+        title: Blaqs PDF Chatbot
+        emoji: 📚
+        colorFrom: blue
+        colorTo: green
+        sdk: gradio
+        sdk_version: 3.20.1
+        app_file: app.py
+        pinned: false
+        ---
+
+        # Blaqs PDF Chatbot
+
+        This is a PDF chatbot application." > README.md
 
     - name: Hugging Face Spaces Deploy
       env:
@@ -38,7 +52,7 @@ jobs:
         git config --global user.email "chinonsoodiaka@gmail.com"
         git config --global user.name "Blaqadonis"
         git add .
-        git commit -m "Update .github directory"
+        git commit -m "Update .github directory and README.md"
         git branch -M main
         echo "Logging in to Hugging Face"
         huggingface-cli login --token $HF_TOKEN
