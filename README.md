@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # **The RAG Bible**
 
 ### Powered by 🅱🅻🅰🆀
@@ -30,3 +31,4 @@ When you're ready to interact with a subproject, use the CLI commands or explore
   
 ## **Contact**
 For any questions, inquiries, or further collaboration, please contact [🅱🅻🅰🆀](https://www.linkedin.com/in/chinonsoodiaka/)
+
