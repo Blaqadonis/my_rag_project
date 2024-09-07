@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -35,6 +37,8 @@ jobs:
         echo "Setting up git remote"
         git remote remove hf || true
         git remote add hf https://Blaqadonis:$HF_TOKEN@huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot
+        echo "Disabling Git LFS"
+        git lfs uninstall
         echo "Pushing to Hugging Face Spaces"
         git push hf main --force || (echo "Push failed. Error:" && git push hf main --force -v)
 
