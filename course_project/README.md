@@ -80,14 +80,16 @@ Running the Application
 =======
 ## Running the Application
 
-To start the chatbot application, simply run:
+To start the chatbot application, 
+
+**1. Simply run**:
 
 ```sh
 python app.py
 ```
 This will launch a Gradio interface where you can upload PDF files and interact with the chatbot.
 
-Using the Deployed Chatbot:
+**2. Using the Deployed Chatbot**:
 
 You can also interact with the chatbot that has been deployed on Hugging Face Spaces. To start using the deployed chatbot:
 
@@ -96,7 +98,7 @@ Click on [this link](https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot)
 
 OR
 
-Build the Docker image:
+**3. Build the Docker image**:
 ```sh
 docker build -t pdfchatbot .
 ```
