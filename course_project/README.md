@@ -87,7 +87,7 @@ To start the chatbot application,
 ```sh
 python app.py
 ```
-This will launch a Gradio interface where you can upload PDF files and interact with the chatbot.
+This will launch a Gradio interface where you can upload PDF files and interact with the chatbot. Click [link](http://localhost:7860/)
 
 **2. Using the Deployed Chatbot**:
 
