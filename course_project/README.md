@@ -117,11 +117,15 @@ docker run -it -p 7860:7860 --env-file .env pdfchatbot
 
 
 ## Evaluation
-To ensure the chatbot's performance is optimal, an evaluation process has been set up to check the accuracy of the responses and detect any hallucinations. This evaluation generates two main reports:
+To ensure the chatbot's performance is optimal, an evaluation process has been set up to check the accuracy of the responses and detect any hallucinations. This evaluation generates the following reports:
 
-```all-mpnet-base-v2-report.csv```: Evaluates the vector store model's retrieval accuracy.
+```ensemble-retriever-report.csv```
 
-```llama-3.1-70b-versatile-hallucination_report.csv```: Assesses the language model's responses for hallucinations.
+```llama-3.1-70b-versatile-evaluation-report.csv```
+
+```model_comparison_results.csv```
+
+```llama3-70b-8192-evaluation-report.csv```
 
 ### Running the Evaluation
 Run the evaluation scripts:
@@ -146,8 +150,8 @@ These scripts will generate the following CSV reports:
 * ```model_comparison_results.csv```: Highlights the comparison between different models to identify the best-performing one.
 * ```ensemble-retriever-report.csv```: Provides a detailed evaluation of the ensemble retriever's performance, comparing its effectiveness with   other retrievers used in the project.
 
-![evaluation](https://github.com/user-attachments/assets/43c687b1-cbed-4eac-86a4-ada5e2953391)
-![hallucination](https://github.com/user-attachments/assets/c1e30e9c-d1a8-46ff-8b15-9959785c9060)
+![retriever_evaluation](https://github.com/user-attachments/assets/ff47e677-4b20-4ed4-ba93-39b08ec87c8f)
+![generator_evaluation](https://github.com/user-attachments/assets/94244ca7-ff1a-4961-a13c-444bd293004e)
 ![monitoring_evaluation](https://github.com/user-attachments/assets/1c1df7c2-45c7-40db-a75c-2e152658288c)
 
 
