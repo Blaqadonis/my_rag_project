@@ -7,6 +7,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.document_loaders import PyMuPDFLoader
 import pandas as pd
+from langchain_community.retrievers import SVMRetriever
+from langchain.retrievers import EnsembleRetriever
 from langchain_openai import ChatOpenAI
 
 # Load environment variables
@@ -39,10 +41,6 @@ index_path = "faiss_index"
 hf = SentenceTransformerEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
 if os.path.exists(index_path):
     vectorstore = FAISS.load_local(index_path, hf, allow_dangerous_deserialization=True)
-    retriever = vectorstore.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={'k': 1, 'score_threshold': 0.5}
-    )
 else:
     # Load the document and create embeddings
     loader = PyMuPDFLoader(pdf_path)
@@ -55,77 +53,121 @@ else:
     )
     chunks = text_splitter.split_documents(text_data)
     vectorstore = FAISS.from_documents(chunks, hf)
-    retriever = vectorstore.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={'k': 1, 'score_threshold': 0.5}
-    )
     # Save the FAISS index locally
     vectorstore.save_local(index_path)
 
-# Initialize the gpt4o-mini model
-chat_model = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
+# Initialize the gpt-4o-mini model for evaluation
+gpt4_mini = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
-# Define a function to create the relevance checking prompt
-def create_relevance_prompt(query, document_content):
+# Define different retrieval methods
+similarity_retriever = vectorstore.as_retriever(
+    search_type="similarity", search_kwargs={"k": 3}
+)
+
+mmr_retriever = vectorstore.as_retriever(
+    search_type="mmr", search_kwargs={"k": 3, "fetch_k": 10}
+)
+
+svm_retriever = SVMRetriever.from_documents(chunks, hf)
+
+# Create an ensemble retriever
+ensemble_retriever = EnsembleRetriever(
+    retrievers=[similarity_retriever, mmr_retriever, svm_retriever],
+    weights=[0.4, 0.3, 0.3]
+)
+
+# Define a function to create the evaluation prompt
+def create_evaluation_prompt(query, correct_answer, retrieved_content):
     prompt = f"""
-    I have a query: "{query}".
-    The following is a part of a document:
-    \"\"\"{document_content}\"\"\"
-    The goal is to grade the performance of a vector database. Is this document content relevant to answering the query? Respond with 'YES' or 'NO'.
+    Question: {query}
+    Correct Answer: {correct_answer}
+    Retrieved Content: {retrieved_content}
+
+    Evaluate the retrieved content based on the following criteria:
+    1. Relevance: Does the content contain information relevant to answering the question?
+    2. Completeness: Does the content provide all the necessary information to answer the question?
+    3. Accuracy: Is the information in the content correct and aligned with the correct answer?
+
+    Provide a score from 0 to 10, where 0 is completely irrelevant or incorrect, and 10 is perfectly relevant and accurate.
+    Only respond with the numeric score.
     """
     return prompt
 
 # Load the qna.csv file
 qna_df = pd.read_csv("qna.csv")
 
+# Function to evaluate a retriever
+def evaluate_retriever(retriever, name):
+    scores = []
+    for _, row in qna_df.iterrows():
+        query = row['question']
+        correct_answer = row['answer']
+        
+        docs = retriever.get_relevant_documents(query)
+        retrieved_content = " ".join([doc.page_content for doc in docs])
+        
+        evaluation_prompt = create_evaluation_prompt(query, correct_answer, retrieved_content)
+        score = int(gpt4_mini.invoke(evaluation_prompt).content.strip())
+        scores.append(score)
+    
+    average_score = sum(scores) / len(scores)
+    print(f"{name} Average Score: {average_score:.2f}")
+    return average_score
+
+# Evaluate each retriever
+similarity_score = evaluate_retriever(similarity_retriever, "Similarity")
+mmr_score = evaluate_retriever(mmr_retriever, "MMR")
+svm_score = evaluate_retriever(svm_retriever, "SVM")
+ensemble_score = evaluate_retriever(ensemble_retriever, "Ensemble")
+
+# Choose the best performing retriever
+best_retriever = max(
+    [("Similarity", similarity_score), ("MMR", mmr_score), 
+     ("SVM", svm_score), ("Ensemble", ensemble_score)],
+    key=lambda x: x[1]
+)
+
+print(f"Best performing retriever: {best_retriever[0]} with score {best_retriever[1]:.2f}")
+
+# Use the best performing retriever for the final evaluation
+best_retriever_instance = globals()[f"{best_retriever[0].lower()}_retriever"]
+
 # Lists to store the results
 questions = []
-answers = []
-llm_answers = []
-grades = []
+correct_answers = []
+retrieved_contents = []
+scores = []
 
 # Iterate through each question in the qna.csv file
-for index, row in qna_df.iterrows():
+for _, row in qna_df.iterrows():
     query = row['question']
     correct_answer = row['answer']
     
-    # Invoke the retriever to get relevant documents
-    docs = retriever.invoke(query)
+    docs = best_retriever_instance.get_relevant_documents(query)
+    retrieved_content = " ".join([doc.page_content for doc in docs])
     
-    # Check relevance for each document returned
-    for doc in docs:
-        relevance_prompt = create_relevance_prompt(query, doc.page_content)
-        relevance_response = chat_model([{"role": "user", "content": relevance_prompt}])
-        
-        # Only interested in "YES" or "NO" responses
-        grade = relevance_response.content.strip()
-        if grade == "YES":
-            llm_answer = doc.page_content
-            break
-        else:
-            llm_answer = doc.page_content  # Use the last document if no "YES" found
+    evaluation_prompt = create_evaluation_prompt(query, correct_answer, retrieved_content)
+    score = int(gpt4_mini.invoke(evaluation_prompt).content.strip())
     
     # Store the results
     questions.append(query)
-    answers.append(correct_answer)
-    llm_answers.append(llm_answer)
-    grades.append(grade)
+    correct_answers.append(correct_answer)
+    retrieved_contents.append(retrieved_content)
+    scores.append(score)
 
-# Calculate the relevancy metric
-num_yes = grades.count("YES")
-total_questions = len(questions)
-relevancy_percentage = (num_yes / total_questions) * 100
+# Calculate the average score
+average_score = sum(scores) / len(scores)
 
-print(f"Relevancy Metric: {relevancy_percentage:.2f}%")
+print(f"Final Average Score: {average_score:.2f}")
 
 # Create a DataFrame for the output CSV
 output_df = pd.DataFrame({
     "question": questions,
-    "answer": answers,
-    "llm_answer": llm_answers,
-    "grade": grades
+    "correct_answer": correct_answers,
+    "retrieved_content": retrieved_contents,
+    "score": scores
 })
 
 # Save the output to a CSV file
-output_df.to_csv("all-mpnet-base-v2-report.csv", index=False)
-print("Output saved to all-mpnet-base-v2-report.csv")
+output_file = f"{best_retriever[0].lower()}-retriever-report.csv"
+output_df.to_csv(output_file, index=False)

@@ -249,3 +249,4 @@ if __name__ == '__main__':
     chatbot = PDFChatbot('config.yaml')
     demo, chat_history, query, submit_btn, pdf_files, image_box = chatbot.create_demo()
     demo.launch(server_name="0.0.0.0", server_port=7860)
+    
