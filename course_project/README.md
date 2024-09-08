@@ -116,6 +116,10 @@ docker run -it -p 7860:7860 --env-file .env pdfchatbot
 ![spaces_error](https://github.com/user-attachments/assets/9a9b8e2f-7f9a-47bf-a6c7-c4eb383f7ad7)
 
 
+## Monitoring
+You need an account with Langchain to access [Langsmith](https://smith.langchain.com/o/f2adffe6-d93b-5c6f-9047-1174f7260035/projects/p/3eb74abf-1641-4802-a971-d5d244e6ac86?timeModel=%7B%22duration%22%3A%227d%22%7D)
+
+
 ## Evaluation
 To ensure the chatbot's performance is optimal, an evaluation process has been set up to check the accuracy of the responses and detect any hallucinations. This evaluation generates the following reports:
 
