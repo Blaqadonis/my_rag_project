@@ -8,8 +8,6 @@ from langchain_core.messages import BaseMessage
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.output_parsers import StrOutputParser
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
-from langchain_cohere import CohereRerank
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_groq import ChatGroq
@@ -22,6 +20,8 @@ from pdf2image import convert_from_path
 from langfuse.callback import CallbackHandler
 import logging
 import gradio as gr
+from langchain_community.retrievers import SVMRetriever
+from langchain.retrievers import EnsembleRetriever
 
 load_dotenv()
 
@@ -112,32 +112,48 @@ class PDFChatbot:
             self.faiss_index = FAISS.from_documents(chunks, self.hf)
             self.faiss_index.save_local("faiss_index")
 
+            # Create SVM retriever here, after chunks are created
+            self.svm_retriever = SVMRetriever.from_documents(chunks, self.hf)
+        else:
+            # Load existing SVM retriever or create a new one if it doesn't exist
+            if not hasattr(self, 'svm_retriever'):
+                chunks = self.faiss_index.docstore._dict.values()
+                self.svm_retriever = SVMRetriever.from_documents(chunks, self.hf)
+
         # Define the prompt
         prompt = ChatPromptTemplate.from_messages([
-    ("system", """You are a Chatbot designed to assist with questions about uploaded documents.
-                You are to answer questions based only on the provided history and context. 
-                If the question is unrelated to the documents, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.' 
-                If you don't know the answer based on the provided information, reply with: 'I don't know.' 
-                If asked about your emotions or feelings, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.'"""),
-    MessagesPlaceholder(variable_name="history"),
-    ("human", """Given this history: {history} and this context from the documents: {context}, answer the following question: {query}""")
-])
-
+            ("system", """You are a Chatbot designed to assist with questions about uploaded documents.
+                        You are to answer questions based only on the provided history and context. 
+                        If the question is unrelated to the documents, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.' 
+                        If you don't know the answer based on the provided information, reply with: 'I don't know.' 
+                        If asked about your emotions or feelings, reply with: 'I'm sorry, but Blaq will like us to only chat about your documents.'"""),
+            MessagesPlaceholder(variable_name="history"),
+            ("human", """Given this history: {history} and this context from the documents: {context}, answer the following question: {query}""")
+        ])
 
         # Define the retriever and retrieval chain
         output_parser = StrOutputParser()
-        retriever = self.faiss_index.as_retriever(search_type="similarity_score_threshold", search_kwargs={"k": self.vector_store_k, "score_threshold": 0.5})
         
-        #compressor = CohereRerank()
-        #compression_retriever = ContextualCompressionRetriever(
-           # base_compressor=compressor, base_retriever=retriever
-        #)
+        # Create Ensemble Retriever
+        similarity_retriever = self.faiss_index.as_retriever(
+            search_type="similarity", search_kwargs={"k": 3}
+        )
+        mmr_retriever = self.faiss_index.as_retriever(
+            search_type="mmr", search_kwargs={"k": 3, "fetch_k": 10}
+        )
+        
+        ensemble_retriever = EnsembleRetriever(
+            retrievers=[similarity_retriever, mmr_retriever, self.svm_retriever],
+            weights=[0.4, 0.3, 0.3]
+        )
+        
         retrieval_chain = (
-            {"context": itemgetter("query") | retriever, "query": itemgetter("query"), "history": itemgetter("history")}
+            {"context": itemgetter("query") | ensemble_retriever, "query": itemgetter("query"), "history": itemgetter("history")}
             | RunnableParallel({"output": prompt | self.llm | output_parser, "context": itemgetter("context")})
         )
         
         logging.getLogger().setLevel(logging.ERROR) # hide warning log
+
 
         # Define the retrieval_chain_with_history
         retrieval_chain_with_history = RunnableWithMessageHistory(
@@ -232,4 +248,5 @@ class PDFChatbot:
 if __name__ == '__main__':
     chatbot = PDFChatbot('config.yaml')
     demo, chat_history, query, submit_btn, pdf_files, image_box = chatbot.create_demo()
-    demo.launch()
+    demo.launch(server_name="0.0.0.0", server_port=7860)
+    
