@@ -127,7 +127,8 @@ You need an account with Langchain to access [Langsmith](https://smith.langchain
 
 ![monitoring_evaluation](https://github.com/user-attachments/assets/1c1df7c2-45c7-40db-a75c-2e152658288c)
 ![image](https://github.com/user-attachments/assets/83019e02-ee80-4f9c-bc04-b4db7e7cb07f)
-![image](https://github.com/user-attachments/assets/98bb7f5b-af51-455e-a052-c194550893eb)
+![image](https://github.com/user-attachments/assets/fa738cfe-f325-4fb2-9d02-d67efc8661ee)
+
 
 
 
