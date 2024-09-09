@@ -56,10 +56,14 @@ PDFChatbot is a powerful tool designed to assist users with extracting and query
     HUGGINGFACE_HUB_API_KEY = '...'
     LANGCHAIN_API_KEY = '...'
     GROQ_API_KEY = '...'
+    OPENAI_API_KEY = '...'
     LANGFUSE_SECRET_KEY= 'sk-...'
     LANGFUSE_PUBLIC_KEY= 'pk-...'
     LANGFUSE_HOST= 'https://cloud.langfuse.com'
     ```
+    Langfuse and Langsmith basically do the same thing - monitoring. For the project, I used [Langfuse](https://cloud.langfuse.com/project/clwuk3f8o0000bzc5mov0mjsa/traces/350841d0-16a1-47fd-8750-db04d36780f1). But to run evaluations, I used [Langsmith](https://smith.langchain.com/o/f2adffe6-d93b-5c6f-9047-1174f7260035/projects/p/f4ce8c05-5aa0-4bc8-8cc4-bfac3afe2736?timeModel=%7B%22duration%22%3A%227d%22%7D). And I used Openai's ```GPT-4o-mini``` for evaluation. 
+    
+    **It should cost < 1 USD to run this entire project**.
 
 ### Configuration
 
