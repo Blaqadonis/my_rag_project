@@ -177,7 +177,7 @@ These scripts will generate the following CSV reports:
 
 ### Additional Notes
 - Waiting for the First Query: The Time Taken to First Token (TTFT) for this application is quite high, depending on your computer's specifications. Therefore, you may have to wait a while for the first query to get answered. However, it is smooth-sailing after that.
-- Due to a Poppler dependency issue peculiar to Hugging Face Spaces, the first page of the PDF may not show on Spaces. However, it will display correctly locally if you have Poppler installed. Please ignore the warning and proceed with writing your query.
+- Due to a Poppler dependency issue peculiar to Hugging Face Spaces, the first page of the PDF may not show on Spaces. However, it will display correctly locally if you have Poppler installed. Please ignore the error and proceed with writing your query.
 
 ## Contributing
 Contributions to enhance the PDFChatbot project are welcome. Please follow these steps to contribute:
