@@ -6,7 +6,7 @@
 This project is part of the **LLM Zoomcamp 2024** course hosted by DataTalksClub. The aim of this project is to create a chatbot that can assist with questions about uploaded PDF documents using various LangChain components and a Gradio interface.
 
 ## Project Structure
-
+```
 course_project/
 ├── app.py
 ├── config.yaml
@@ -16,7 +16,7 @@ course_project/
 ├── requirements.txt
 └── README.md
 
-
+```
 
 
 ## Overview
