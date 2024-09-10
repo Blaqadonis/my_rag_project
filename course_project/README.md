@@ -1,5 +1,8 @@
 # PDFChatbot
 
+![Screen Recording - Sep 10, 2024](https://github.com/user-attachments/assets/b733ed99-67da-4975-b864-65f8087a37a0)
+
+
 ![project_architecture](https://github.com/user-attachments/assets/76c3e4e2-4151-4438-b25b-621f97b131bf)
 
 
