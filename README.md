@@ -13,6 +13,7 @@ The RAG Bible is a collection of my personal research and learnings on Retrieval
 Command Line Interface:
 
 * Run ```python script.py``` for a basic CLI interaction.
+
   Copy ```.env``` into the agent directory. Adjust the query into whatever question you wish. Then
 * Run ```python main.py``` for interacting with an agentic system via CLI. 
   
