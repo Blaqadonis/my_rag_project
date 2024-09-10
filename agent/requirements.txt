@@ -1,0 +1,14 @@
+langchain_huggingface
+sentence-transformers
+langchain_community
+langchain_cohere
+langchain_openai
+langchain_groq
+python-dotenv
+langchainhub
+faiss-cpu
+langgraph
+pdf2image
+langfuse
+pymupdf
+gradio
