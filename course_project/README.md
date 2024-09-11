@@ -128,8 +128,7 @@ docker run -it -p 7860:7860 --env-file .env pdfchatbot
 ## Monitoring
 You need an account with Langchain to access [Langsmith](https://smith.langchain.com/o/f2adffe6-d93b-5c6f-9047-1174f7260035/projects/p/3eb74abf-1641-4802-a971-d5d244e6ac86?timeModel=%7B%22duration%22%3A%227d%22%7D)
 
-![monitoring_evaluation](https://github.com/user-attachments/assets/1c1df7c2-45c7-40db-a75c-2e152658288c)
-![image](https://github.com/user-attachments/assets/83019e02-ee80-4f9c-bc04-b4db7e7cb07f)
+![CHINONSO ODIAKA's Video - Sep 11, 2024](https://github.com/user-attachments/assets/b8c992ff-5ace-4ac1-8139-c07ede9d25df)
 ![image](https://github.com/user-attachments/assets/fa738cfe-f325-4fb2-9d02-d67efc8661ee)
 
 
