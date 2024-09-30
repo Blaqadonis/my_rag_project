@@ -2,11 +2,10 @@ import os
 import yaml
 from typing import List, Tuple
 from operator import itemgetter
-from langchain_community.embeddings.sentence_transformer import SentenceTransformerEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.messages import BaseMessage
-from langchain_core.pydantic_v1 import Field
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from langchain_core.output_parsers import StrOutputParser
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -30,7 +29,6 @@ class PDFChatbot:
     def __init__(self, config_path: str):
         """
         Initialize the PDFChatbot with the configuration from the given path.
-
         Args:
             config_path (str): The path to the configuration file.
         """
@@ -44,7 +42,8 @@ class PDFChatbot:
 
         self.store = {}
         self.faiss_index = None
-        self.hf = SentenceTransformerEmbeddings(model_name=self.vector_store_model_name)
+        #self.hf = SentenceTransformerEmbeddings(model_name=self.vector_store_model_name)
+        self.hf = HuggingFaceEmbeddings(model_name=self.vector_store_model_name)
         self.llm = ChatGroq(temperature=self.llm_temperature, model_name=self.llm_model_name)
 
         # Initialize Langfuse handler
@@ -57,10 +56,8 @@ class PDFChatbot:
     def get_by_session_id(self, session_id: str) -> BaseChatMessageHistory:
         """
         Get the chat message history for the given session ID.
-
         Args:
             session_id (str): The session ID.
-
         Returns:
             BaseChatMessageHistory: The chat message history for the session.
         """
@@ -77,7 +74,6 @@ class PDFChatbot:
         def add_messages(self, messages: List[BaseMessage]) -> None:
             """
             Add messages to the chat message history.
-
             Args:
                 messages (List[BaseMessage]): The messages to add.
             """
@@ -92,12 +88,10 @@ class PDFChatbot:
     def process_pdfs(self, pdf_files: List[str], query: str, history: List[List[str]] = []) -> List[List[str]]:
         """
         Process the uploaded PDF files and answer the given query using the chatbot.
-
         Args:
             pdf_files (List[str]): The uploaded PDF files.
             query (str): The query to answer.
             history (List[List[str]], optional): The chat history. Defaults to an empty list.
-
         Returns:
             List[List[str]]: The updated chat history.
         """
@@ -170,10 +164,8 @@ class PDFChatbot:
     def load_and_chunk_data(self, pdf_path: str) -> List[str]:
         """
         Load and chunk the data from the given PDF file.
-
         Args:
             pdf_path (str): The path to the PDF file.
-
         Returns:
             List[str]: The chunks of text from the PDF file.
         """
@@ -191,10 +183,8 @@ class PDFChatbot:
     def render_file(self, pdf_files: List[str]) -> Image.Image:
         """
         Render the front page of the first uploaded PDF file.
-
         Args:
             pdf_files (List[str]): The uploaded PDF files.
-
         Returns:
             Image.Image: The image of the front page.
         """
@@ -214,7 +204,6 @@ class PDFChatbot:
     def create_demo(self) -> Tuple[gr.Blocks, gr.Chatbot, gr.Textbox, gr.Button, gr.Files, gr.Image]:
         """
         Create the Gradio demo for the PDF chatbot.
-
         Returns:
             Tuple[gr.Blocks, gr.Chatbot, gr.Textbox, gr.Button, gr.Files, gr.Image]: The Gradio demo components.
         """
@@ -250,4 +239,3 @@ if __name__ == '__main__':
     chatbot = PDFChatbot('config.yaml')
     demo, chat_history, query, submit_btn, pdf_files, image_box = chatbot.create_demo()
     demo.launch(server_name="0.0.0.0", server_port=7860)
-    
