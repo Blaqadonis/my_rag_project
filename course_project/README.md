@@ -16,6 +16,7 @@ course_project/
 ├── Dockerfile
 ├── knowledgebase_eval.py
 ├── generator_eval.py
+├── qna.csv
 ├── requirements.txt
 └── README.md
 
@@ -33,12 +34,28 @@ PDFChatbot is a powerful tool designed to assist users with extracting and query
 - **History Management**: Maintains the history of the chat sessions.
 - **Interactive Interface**: User-friendly interface built with Gradio.
 
+## Technical Overview
+
+* **LangChain**: I used the Langchain framework for its off-the-shelf solutions tailored for retrieval-augmented generation (RAG), offering a strong foundation for my application's architecture. Since the primary data consists of PDF text, I implemented semantic search to retrieve relevant information effectively. However, handling PDF files with tables and charts remains a challenge in the current implementation. To address this in the future, I plan to incorporate a technique known as ```ColPali``` introduced to the world by Cornell University via [this paper](https://arxiv.org/abs/2407.01449), which will enhance the ability to process more complex PDFs, including those containing structured data like tables and charts.
+
+* **Ensemble Retriever**: For the retrieval process, I adopted an ensemble retriever, combining semantic similarity and maximal marginal relevance (MMR) retrievers to diversify search results. Additionally, I integrated a support vector machine retriever, assigning weighted importance to each method to optimize retrieval accuracy.
+
+* **FAISS Index**: For quick prototyping, I used FAISS CPU, which has proven to be straightforward and efficient for text-based data retrieval.
+
+* **Guardrail**: The chatbot is designed with a feature to ensure conversations remain focused on the uploaded documents. If a user attempts to stray from this context, the bot responds with: ```I'm sorry, but Blaq will like us to ONLY chat about your documents```. This keeps interactions aligned with the app’s purpose, preventing inappropriate queries.
+
+* **Fast Inference**: To further enhance performance, I used a Groq model for generation. Groq's TSP architecture is known for its fast inference capabilities, making it ideal for the rapid processing needs of the chatbot.
+
 ## Getting Started
 
 ### Prerequisites
 
 - Python 3.10 or higher
 - Virtual Environment (optional but recommended)
+
+### The Data
+
+Any PDF document can be used, but for evaluating the app, I chose [this PDF](https://pressbooks.oer.hawaii.edu/humannutrition2/) on human nutrition.
 
 ### Installation
 
@@ -117,6 +134,7 @@ docker run -it -p 7860:7860 --env-file .env pdfchatbot
 ```
 
 ## Usage
+
 * Upload PDF: Click on the upload button to select one or more PDF files.
 * Ask Questions: Type your question in the text box and click send. The chatbot will provide answers based on the content of the uploaded PDFs.
 * View Document: The front page of the uploaded PDF will be displayed in the image box.
@@ -125,9 +143,17 @@ docker run -it -p 7860:7860 --env-file .env pdfchatbot
 ![spaces_error](https://github.com/user-attachments/assets/9a9b8e2f-7f9a-47bf-a6c7-c4eb383f7ad7)
 
 
-## Monitoring
-You need an account with Langchain to access [Langsmith](https://smith.langchain.com/o/f2adffe6-d93b-5c6f-9047-1174f7260035/projects/p/3eb74abf-1641-4802-a971-d5d244e6ac86?timeModel=%7B%22duration%22%3A%227d%22%7D)
+## Monitoring & Observability
 
+You need an account with Langchain to access [Langsmith](https://smith.langchain.com/o/f2adffe6-d93b-5c6f-9047-1174f7260035/projects/p/3eb74abf-1641-4802-a971-d5d244e6ac86?timeModel=%7B%22duration%22%3A%227d%22%7D) or create an account with [Langfuse](https://cloud.langfuse.com/).
+
+They are both comprehensive LLMOps tools that enables effective tracking, monitoring, and evaluation of language model performance. Key features include:
+
+* **Trace Management**: Monitor and trace your model runs, capturing essential metrics and metadata for in-depth analysis.
+* **Save and Create Datasets**: Easily store and create custom datasets for your specific use cases, improving the consistency and quality of model evaluation.
+* **Convert Traces into Datasets**: Automatically turn your run traces into datasets, allowing for further optimization and fine-tuning of your models.
+* **Run Paid Evaluations**: Conduct paid evaluations to gain more detailed insights into your model’s performance.
+* **Metadata Filters**: View and filter crucial metadata, including tokens spent, latency, memory usage, and other performance indicators to better understand the behavior of your models.
 ![CHINONSO ODIAKA's Video - Sep 11, 2024](https://github.com/user-attachments/assets/b8c992ff-5ace-4ac1-8139-c07ede9d25df)
 ![image](https://github.com/user-attachments/assets/fa738cfe-f325-4fb2-9d02-d67efc8661ee)
 
@@ -136,6 +162,7 @@ You need an account with Langchain to access [Langsmith](https://smith.langchain
 
 
 ## Evaluation
+
 To ensure the chatbot's performance is optimal, an evaluation process has been set up to check the accuracy of the responses and detect any hallucinations. This evaluation generates the following reports:
 
 ```ensemble-retriever-report.csv```
@@ -147,6 +174,7 @@ To ensure the chatbot's performance is optimal, an evaluation process has been s
 ```llama3-70b-8192-evaluation-report.csv```
 
 ### Running the Evaluation
+
 Run the evaluation scripts:
 
 After processing your PDFs and interacting with the chatbot, you can evaluate the performance of your choice vector database, or the performance of your LLM
@@ -164,6 +192,7 @@ These scripts will generate the following CSV reports:
 * ensemble-retriever-report.csv
 
 ### Understanding the Reports
+
 * ```llama-3.1-70b-versatile-evaluation-report.csv```: Provides a detailed analysis of the performance of the llama-3.1-70b-versatile model.
 * ```llama3-70b-8192-evaluation-report.csv```: Provides a detailed analysis of the performance of the llama3-70b-8192 model.
 * ```model_comparison_results.csv```: Highlights the comparison between different models to identify the best-performing one.
@@ -176,12 +205,26 @@ These scripts will generate the following CSV reports:
 
 
 
+## Deployment
+
+PDFChatbot has been successfully deployed on Hugging Face Spaces. You can view the continuous integration and deployment (CI/CD) pipeline [here](https://github.com/Blaqadonis/my_rag_project/edit/main/.github/).
+
+Check out the live chatbot via this link: [link](https://huggingface.co/spaces/Blaqadonis/Blaqs-PDF-Chatbot).
+
+![image](https://github.com/user-attachments/assets/dcd2b3d9-a31e-4c72-8198-bcc35aad07ed)
+
+
+
+
 
 ### Additional Notes
-- Waiting for the First Query: The Time Taken to First Token (TTFT) for this application is quite high, depending on your computer's specifications. Therefore, you may have to wait a while for the first query to get answered. However, it is smooth-sailing after that.
-- Due to a Poppler dependency issue peculiar to Hugging Face Spaces, the first page of the PDF may not show on Spaces. However, it will display correctly locally if you have Poppler installed. Please ignore the error and proceed with writing your query.
+
+- ```Initial Query Delay```: The Time Taken to First Token (TTFT) for this application can be relatively long, depending on your computer's hardware. You may experience a noticeable wait time for the first query to be processed, but performance improves significantly after the initial response.
+- ```Image Display Error (HuggingFace Spaces and Docker)```: A dependency conflict between PymuPDF and poppler may prevent the first page of the PDF from displaying correctly when using the app on HuggingFace Spaces or via Docker. However, this issue does not occur when running the app locally with poppler installed in your system's path. You can safely ignore this error and proceed with submitting your query.
+
 
 ## Contributing
+
 Contributions to enhance the PDFChatbot project are welcome. Please follow these steps to contribute:
 
 * Fork the repository
@@ -192,9 +235,11 @@ Contributions to enhance the PDFChatbot project are welcome. Please follow these
 * Open a pull request
 
 ## License
+
 This project is licensed under the MIT License
 
 ## Acknowledgments
+
 I want to acknowledge [Alexey Grigorev](https://www.linkedin.com/in/agrigorev/), founder [DataTalksClub](https://datatalks.club/) - for providing the platform to learn and grow.
 
 Feel free to reach out if you have any questions or need further assistance - [🅱🅻🅰🆀](https://www.linkedin.com/in/chinonsoodiaka/)
