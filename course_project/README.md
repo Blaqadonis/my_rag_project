@@ -70,6 +70,9 @@ Any PDF document can be used, but for evaluating the app, I chose [this PDF](htt
     pip install -r requirements.txt
     ```
 
+    For the PDF you uploaded to display, you need to run:
+    ```conda install -c conda-forge poppler```
+
 3. **Set up environment variables**:
     - Create a `.env` file and update it with your configuration.
     ```env
