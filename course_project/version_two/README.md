@@ -1,6 +1,7 @@
 # **PDFChatbot v2.0**
 
-![Logo](https://github.com/user-attachments/assets/515aa6e7-aa7f-4576-bd66-994414a6ce7c)
+![talkblaq](https://github.com/user-attachments/assets/ea385113-a5e2-4dac-9e41-ecce3dc87a08)
+
 
 
 ## Overview
